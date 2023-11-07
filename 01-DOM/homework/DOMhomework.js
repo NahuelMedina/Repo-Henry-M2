@@ -7,7 +7,7 @@ let toDoItems = [];
 // agregar tu nombre al final del texto actual. Ej: 'Aplicación creada por Franco'
 // Tu código acá:
 let putName = document.querySelector("#createdBy");
-putName.innerHTML = "Aplicación creada por Nahuel";
+putName.innerHTML = putName.innerHTML + " Nahuel";
 
 // Crear una clase denominada 'ToDo' cuyo constructor debe recibir un único parámetro del tipo string
 // con el nombre 'description' que será justamente la descripción del ToDo.
@@ -27,7 +27,8 @@ function ToDo(description) {
 
 // Tu código acá:
 ToDo.prototype.completeToDo = function () {
-  this.complete = true;
+  if (!this.complete) this.complete = true;
+  else this.complete = false;
 };
 
 // Agregar dos parámetros a la función 'buildToDo':
@@ -53,16 +54,19 @@ function buildToDo(todo, index) {
 
   let newCheckBox = document.createElement("input");
   newCheckBox.type = "checkbox";
-  newCheckBox.setAttribute("id", index);
+
+  newCheckBox.id = index;
   newCheckBox.className = "completeCheckbox";
+
   var toDoText = document.createElement("span");
   toDoText.innerHTML = todo.description;
-  if (todo.complete === true) {
-    newCheckBox.setAttribute = "checked";
+  if (todo.complete) {
+    newCheckBox.setAttribute("checked", true);
+    toDoText.className = "completeText";
   }
   toDoShell.appendChild(newCheckBox);
   toDoShell.appendChild(toDoText);
-  newCheckBox.addEventListener("click", buildToDo);
+  newCheckBox.addEventListener("click", completeToDo);
   return toDoShell;
 }
 
@@ -90,9 +94,7 @@ function displayToDos() {
   toDoContainer.innerHTML = "";
   let toDos = buildToDos(toDoItems);
   console.log(toDos);
-  for (let i = 0; i < toDos.length; i++) {
-    toDoContainer.innerHTML += toDos[i].outerHTML;
-  }
+  toDos.map((e) => toDoContainer.appendChild(e));
 }
 
 // La función 'addToDo' agregará un nuevo ToDo al array 'toDoItems'
@@ -105,8 +107,8 @@ function displayToDos() {
 //  4) Llamar a la función displayToDos para que se actualicen los toDos mostrados en pantalla
 
 function addToDo() {
-  let toDoInput = document.querySelector("#toDoInput").value;
-  let newToDo = new ToDo(toDoInput);
+  let toDoInputValue = document.querySelector("#toDoInput").value;
+  let newToDo = new ToDo(toDoInputValue);
   toDoItems.push(newToDo);
   toDoInput.value = "";
   displayToDos();
